@@ -1,6 +1,7 @@
 // 应用程序的业务逻辑，接收来自路由器的请求，执行相应业务逻辑
 const {UserRegisterError} = require('../error/error')
 const {createUser,getUserInfo} = require('../service/user.service')
+const jwt = require('jsonwebtoken') // 生成token库
 class UserController {
   async UserRegister(ctx, next) {
     // 错误捕捉
@@ -28,10 +29,26 @@ class UserController {
       ctx.body = {
         code:0,
         message:'登录成功',
-        result:res
+        result:jwt.sign(res,'fjhtglxt',{expiresIn:'1d'}) // 生成token,加盐加密,expiresIn设置过期时间
       }
     } catch (error) {
     }
   }
+
+  // 获取用户信息
+  async getInfo(ctx,next) {
+    try {
+      const {id} =  ctx.state.user // token里面存储了个人信息，所以可以结构出id
+      const {password,...res} = await getUserInfo({id}) // 不获取password
+      ctx.body = {
+        code:0,
+        message:'获取用户信息成功',
+        result:res
+      }
+    } catch (error) {
+    }
+
+  }
+
 }
 module.exports= new UserController()

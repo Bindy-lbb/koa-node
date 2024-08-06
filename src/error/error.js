@@ -20,6 +20,16 @@ module.exports = {
       code :'10004',
       message:'登录失败',
       result:''
+    },
+    TokenExpiredError: {
+      code:'10005',
+      message:'token过期',
+      result:''
+    },
+    JsonWebTokenError:{
+      code:'10006',
+      message:'token无效',
+      result:''
     }
 
 
